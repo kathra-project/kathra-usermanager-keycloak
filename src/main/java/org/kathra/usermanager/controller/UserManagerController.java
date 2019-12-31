@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2019 The Kathra Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +15,7 @@
  *
  * Contributors:
  *
- *    IRT SystemX (https://www.kathra.org/)    
+ *    IRT SystemX (https://www.kathra.org/)
  *
  */
 package org.kathra.usermanager.controller;
@@ -27,6 +27,7 @@ import org.kathra.usermanager.Config;
 import org.kathra.usermanager.service.UserManagerService;
 import org.kathra.usermanager.services.KeycloakService;
 import org.apache.camel.cdi.ContextName;
+import org.kathra.utils.KathraException;
 import org.keycloak.representations.idm.GroupRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 
@@ -71,13 +72,19 @@ public class UserManagerController implements UserManagerService {
         );
     }
 
+    @Override
+    public User assignUserToGroup(String userId, String groupPath) throws Exception {
+        keycloakService.addUserToGroup(getUser(userId), getGroup(groupPath));
+        return null;
+    }
+
     /**
      * Create a new group
      *
      * @return Group
      */
-    public Group createGroup() throws Exception {
-        return null;
+    public Group createGroup(Group group) throws Exception {
+        return keycloakService.createGroup(group);
     }
 
     /**
@@ -85,7 +92,17 @@ public class UserManagerController implements UserManagerService {
      *
      * @return User
      */
-    public User createUser() throws Exception {
+    public User createUser(User user) throws Exception {
+        return keycloakService.createUser(user);
+    }
+
+    @Override
+    public Group deleteGroup(String groupPath) throws Exception {
+        return null;
+    }
+
+    @Override
+    public User deleteUser(String userId) throws Exception {
         return null;
     }
 
@@ -96,7 +113,7 @@ public class UserManagerController implements UserManagerService {
      * @return Group
      */
     public Group getGroup(String groupPath) throws Exception {
-        return null;
+        return getGroups().stream().filter(g -> g.getPath().equals(groupPath)).findFirst().orElseThrow( () -> new KathraException("Group not found", null, KathraException.ErrorCode.NOT_FOUND ));
     }
 
     /**
@@ -111,6 +128,11 @@ public class UserManagerController implements UserManagerService {
         return groups;
     }
 
+    @Override
+    public List<Group> getGroupsAssignationsFromUser(String userId) throws Exception {
+        return keycloakService.getMemberGroups(getUser(userId));
+    }
+
     /**
      * Return user object
      *
@@ -118,7 +140,7 @@ public class UserManagerController implements UserManagerService {
      * @return User
      */
     public User getUser(String userId) throws Exception {
-        return null;
+        return keycloakService.getUser(userId);
     }
 
     /**
@@ -127,6 +149,32 @@ public class UserManagerController implements UserManagerService {
      * @return List<User>
      */
     public List<User> getUsers() throws Exception {
+        return null;
+    }
+
+    @Override
+    public Group patchGroup(String groupPath, Group group) throws Exception {
+        return null;
+    }
+
+    @Override
+    public User patchUser(String userId, User user) throws Exception {
+        return null;
+    }
+
+    @Override
+    public User unassignUserToGroup(String userId, String groupPath) throws Exception {
+        keycloakService.removeUserToGroup(getUser(userId), getGroup(groupPath));
+        return null;
+    }
+
+    @Override
+    public Group updateGroup(String groupPath, Group group) throws Exception {
+        return null;
+    }
+
+    @Override
+    public User updateUser(String userId, User user) throws Exception {
         return null;
     }
 }
