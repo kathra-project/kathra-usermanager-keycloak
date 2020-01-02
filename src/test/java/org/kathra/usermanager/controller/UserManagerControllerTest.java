@@ -87,8 +87,7 @@ public class UserManagerControllerTest {
         Mockito.reset(keycloakService);
         Mockito.when(keycloakService.getGroups()).thenReturn(keycloakGroups);
         Mockito.when(keycloakService.getGroupMembers("subGroupId")).thenReturn(keycloakGroupUsers);
-        underTest = new UserManagerController();
-        underTest.keycloakService = keycloakService;
+        underTest = new UserManagerController(keycloakService);
     }
 
     @Test

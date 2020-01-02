@@ -46,9 +46,14 @@ public class UserManagerController implements UserManagerService {
         config = new Config();
         keycloakService = new KeycloakService(
                 config.getKeycloakAuthUrl(),
+                config.getKeycloakRealmAdmin(),
                 config.getKeycloakRealm(),
                 config.getKeycloakClientId(),
-                config.getKeycloakClientSecret());
+                config.getKeycloakUsername(),
+                config.getKeycloakPassword());
+    }
+    public UserManagerController(KeycloakService keycloakService) {
+        this.keycloakService = keycloakService;
     }
 
     private void populateGroup(List<Group> groups, List<GroupRepresentation> subGroups) {
@@ -149,7 +154,7 @@ public class UserManagerController implements UserManagerService {
      * @return List<User>
      */
     public List<User> getUsers() throws Exception {
-        return null;
+        return keycloakService.getUsers();
     }
 
     @Override

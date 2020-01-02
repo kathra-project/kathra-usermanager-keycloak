@@ -22,6 +22,7 @@
 package org.kathra.usermanager.services;
 
 import com.google.common.collect.ImmutableList;
+import jdk.jshell.spi.ExecutionControl;
 import org.kathra.core.model.Group;
 import org.kathra.core.model.User;
 import org.keycloak.OAuth2Constants;
@@ -45,15 +46,16 @@ public class KeycloakService {
     private Keycloak keycloak;
     RealmResource kathraRealm;
 
-    public KeycloakService(String url, String realm, String clientId, String clientSecret) {
-        this.keycloak = KeycloakBuilder.builder() //
-                .serverUrl(url) //
-                .grantType(OAuth2Constants.CLIENT_CREDENTIALS) //
-                .realm(realm) //
-                .clientId(clientId) //
-                .clientSecret(clientSecret) //
+    public KeycloakService(String url, String realmAdmin, String realmKathra, String clientId, String username, String password) {
+        this.keycloak = KeycloakBuilder.builder()
+                .serverUrl(url)
+                .grantType(OAuth2Constants.PASSWORD)
+                .realm(realmAdmin)
+                .clientId(clientId)
+                .username(username)
+                .password(password)
                 .build();
-        kathraRealm = keycloak.realm(realm);
+        kathraRealm = keycloak.realm(realmKathra);
     }
 
     public List<UserRepresentation> getGroupMembers(String groupId) {
@@ -77,7 +79,7 @@ public class KeycloakService {
     public User createUser(User user) {
         UserRepresentation userRepresentation = new UserRepresentation();
         CredentialRepresentation passwordCred = new CredentialRepresentation();
-        passwordCred.setType("password");
+        passwordCred.setType(CredentialRepresentation.PASSWORD);
         passwordCred.setValue(user.getPassword());
         userRepresentation.setCredentials(ImmutableList.of(passwordCred));
         userRepresentation.setEnabled(true);
@@ -94,21 +96,24 @@ public class KeycloakService {
         return user;
     }
 
-    public void addUserToGroup(User user, Group group) {
+    public User addUserToGroup(User user, Group group) {
         UserRepresentation userR = kathraRealm.users().list().stream().filter(u -> u.getUsername().equals(user.getName())).findFirst().get();
-        GroupRepresentation groupR = kathraRealm.groups().groups().stream().filter(u -> u.getName().equals(group.getName())).findFirst().get();
+        GroupRepresentation groupR = getGroups().stream().filter(u -> u.getPath().equals(group.getPath())).findFirst().get();
         kathraRealm.users().get(userR.getId()).joinGroup(groupR.getId());
-        return;
+        return user;
     }
-    public void removeUserToGroup(User user, Group group) {
-        return;
+    public User removeUserToGroup(User user, Group group) {
+        UserRepresentation userR = kathraRealm.users().list().stream().filter(u -> u.getUsername().equals(user.getName())).findFirst().get();
+        GroupRepresentation groupR = getGroups().stream().filter(u -> u.getPath().equals(group.getPath())).findFirst().get();
+        kathraRealm.users().get(userR.getId()).leaveGroup(groupR.getId());
+        return user;
     }
 
     public Group createGroup(Group group) {
         GroupRepresentation groupRepresentation = new GroupRepresentation();
         groupRepresentation.setName(group.getName());
         groupRepresentation.setPath(group.getPath());
-        Response response = kathraRealm.groups().add(groupRepresentation);
+        Response response = kathraRealm.groups().group(kathraRealm.getGroupByPath("kathra-projects").getId()).subGroup(groupRepresentation);
         String groupId = response.getLocation().getPath().replaceAll(".*/([^/]+)$", "$1");
         //group.providerId(groupId);
 
@@ -125,4 +130,11 @@ public class KeycloakService {
         return kathraRealm.users().list().stream().filter(u -> u.getUsername().equals(user.getName())).findFirst().get();
     }
 
+    public List<User> getUsers() {
+        return kathraRealm.users().list().stream().map(user -> mapToUser(user)).collect(Collectors.toList());
+    }
+
+    private User mapToUser(UserRepresentation userR) {
+        return new User().name(userR.getUsername()).email(userR.getEmail()).firstName(userR.getFirstName()).lastName(userR.getLastName());
+    }
 }
