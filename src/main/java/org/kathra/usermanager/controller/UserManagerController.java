@@ -59,13 +59,13 @@ public class UserManagerController implements UserManagerService {
     private void populateGroup(List<Group> groups, List<GroupRepresentation> subGroups) {
         subGroups.forEach(subGroupRepresentation -> {
                     Group group = new Group()
-                            .id(subGroupRepresentation.getId())
+                            //.id(subGroupRepresentation.getId())
                             .name(subGroupRepresentation.getName())
                             .path(subGroupRepresentation.getPath());
 
                     List<UserRepresentation> members = keycloakService.getGroupMembers(group.getId());
                     for (UserRepresentation member : members) {
-                        Assignation userAssignation = new Assignation().id(member.getId()).name(member.getUsername());
+                        Assignation userAssignation = new Assignation().name(member.getUsername());
                         if (group.getMembers() == null || !group.getMembers().contains(userAssignation)) {
                             group.addMembersItem(userAssignation);
                         }
