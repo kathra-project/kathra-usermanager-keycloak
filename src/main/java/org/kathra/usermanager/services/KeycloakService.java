@@ -36,6 +36,7 @@ import org.keycloak.representations.idm.UserRepresentation;
 
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -121,17 +122,19 @@ public class KeycloakService {
     }
 
     public User getUser(String userId) {
-        UserRepresentation userR = kathraRealm.users().list().stream().filter(u -> u.getUsername().equals(userId)).findFirst().get();
-        return new User().name(userR.getUsername()).lastName(userR.getLastName()).firstName(userR.getFirstName()).email(userR.getEmail());
+        Optional<UserRepresentation> userR = kathraRealm.users().list().parallelStream().filter(u -> u.getUsername().equals(userId)).findFirst();
+        if (userR.isEmpty())
+            return null;
+        return new User().name(userR.get().getUsername()).lastName(userR.get().getLastName()).firstName(userR.get().getFirstName()).email(userR.get().getEmail());
     }
 
 
     private UserRepresentation getUserRepresentation(User user) {
-        return kathraRealm.users().list().stream().filter(u -> u.getUsername().equals(user.getName())).findFirst().get();
+        return kathraRealm.users().list().parallelStream().filter(u -> u.getUsername().equals(user.getName())).findFirst().get();
     }
 
     public List<User> getUsers() {
-        return kathraRealm.users().list().stream().map(user -> mapToUser(user)).collect(Collectors.toList());
+        return kathraRealm.users().list().parallelStream().map(user -> mapToUser(user)).collect(Collectors.toList());
     }
 
     private User mapToUser(UserRepresentation userR) {

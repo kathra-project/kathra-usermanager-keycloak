@@ -57,19 +57,19 @@ public class UserManagerController implements UserManagerService {
     }
 
     private void populateGroup(List<Group> groups, List<GroupRepresentation> subGroups) {
-        subGroups.forEach(subGroupRepresentation -> {
+
+        subGroups.parallelStream().forEach(subGroupRepresentation -> {
                     Group group = new Group()
-                            //.id(subGroupRepresentation.getId())
                             .name(subGroupRepresentation.getName())
                             .path(subGroupRepresentation.getPath());
 
-                    List<UserRepresentation> members = keycloakService.getGroupMembers(group.getId());
-                    for (UserRepresentation member : members) {
+                    List<UserRepresentation> members = keycloakService.getGroupMembers(subGroupRepresentation.getId());
+                    members.parallelStream().forEach(member -> {
                         Assignation userAssignation = new Assignation().name(member.getUsername());
                         if (group.getMembers() == null || !group.getMembers().contains(userAssignation)) {
                             group.addMembersItem(userAssignation);
                         }
-                    }
+                    });
                     groups.add(group);
                     if (subGroupRepresentation.getSubGroups() != null)
                         populateGroup(groups, subGroupRepresentation.getSubGroups());
@@ -118,7 +118,7 @@ public class UserManagerController implements UserManagerService {
      * @return Group
      */
     public Group getGroup(String groupPath) throws Exception {
-        return getGroups().stream().filter(g -> g.getPath().equals(groupPath)).findFirst().orElseThrow( () -> new KathraException("Group not found", null, KathraException.ErrorCode.NOT_FOUND ));
+        return getGroups().parallelStream().filter(g -> g.getPath().equals(groupPath)).findFirst().orElseThrow( () -> new KathraException("Group not found", null, KathraException.ErrorCode.NOT_FOUND ));
     }
 
     /**
@@ -145,7 +145,11 @@ public class UserManagerController implements UserManagerService {
      * @return User
      */
     public User getUser(String userId) throws Exception {
-        return keycloakService.getUser(userId);
+        User user = keycloakService.getUser(userId);
+        if (user == null) {
+            throw new  KathraException("User not found", null, KathraException.ErrorCode.NOT_FOUND);
+        }
+        return user;
     }
 
     /**
