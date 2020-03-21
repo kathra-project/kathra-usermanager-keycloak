@@ -66,6 +66,11 @@
                 <version>2.19</version>
                 <configuration>
                     <environmentVariables>
+                        <KEYCLOAK_REALM>null</KEYCLOAK_REALM>
+                        <KEYCLOAK_ADMIN_USERNAME>null</KEYCLOAK_ADMIN_USERNAME>
+                        <KEYCLOAK_ADMIN_PASSWORD>null</KEYCLOAK_ADMIN_PASSWORD>
+                        <KEYCLOAK_ADMIN_REALM>null</KEYCLOAK_ADMIN_REALM>
+                        <KEYCLOAK_ADMIN_AUTH_URL>null</KEYCLOAK_ADMIN_AUTH_URL>
                         <KEYCLOAK_ADMIN_CLIENT_ID>null</KEYCLOAK_ADMIN_CLIENT_ID>
                         <KEYCLOAK_ADMIN_CLIENT_SECRET>null</KEYCLOAK_ADMIN_CLIENT_SECRET>
                     </environmentVariables>

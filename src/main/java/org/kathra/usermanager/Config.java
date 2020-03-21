@@ -30,14 +30,18 @@ public class Config extends ConfigManager {
 
     private String keycloakAuthUrl;
     private String keycloakRealm;
+    private String keycloakRealmAdmin;
     private String keycloakClientId;
-    private String keycloakClientSecret;
+    private String keycloakUsername;
+    private String keycloakPassword;
 
     public Config() {
-        keycloakAuthUrl = getProperty("KEYCLOAK_ADMIN_AUTH_URL", "https://keycloak.dev-irtsysx.fr/auth");
-        keycloakRealm = getProperty("KEYCLOAK_ADMIN_REALM", "kathra");
+        keycloakAuthUrl = getProperty("KEYCLOAK_ADMIN_AUTH_URL");
+        keycloakRealmAdmin = getProperty("KEYCLOAK_ADMIN_REALM");
+        keycloakRealm = getProperty("KEYCLOAK_REALM");
         keycloakClientId = getProperty("KEYCLOAK_ADMIN_CLIENT_ID");
-        keycloakClientSecret = getProperty("KEYCLOAK_ADMIN_CLIENT_SECRET");
+        keycloakUsername = getProperty("KEYCLOAK_ADMIN_USERNAME");
+        keycloakPassword = getProperty("KEYCLOAK_ADMIN_PASSWORD");
     }
 
     public String getKeycloakAuthUrl() {
@@ -52,7 +56,16 @@ public class Config extends ConfigManager {
         return keycloakClientId;
     }
 
-    public String getKeycloakClientSecret() {
-        return keycloakClientSecret;
+
+    public String getKeycloakUsername() {
+        return keycloakUsername;
+    }
+
+    public String getKeycloakPassword() {
+        return keycloakPassword;
+    }
+
+    public String getKeycloakRealmAdmin() {
+        return keycloakRealmAdmin;
     }
 }
