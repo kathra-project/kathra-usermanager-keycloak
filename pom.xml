@@ -90,7 +90,7 @@
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-admin-client</artifactId>
-            <version>4.2.1.Final</version>
+            <version>${keycloak-authz-client.version}</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
