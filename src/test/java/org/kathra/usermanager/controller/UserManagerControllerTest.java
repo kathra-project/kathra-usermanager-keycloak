@@ -73,6 +73,7 @@ public class UserManagerControllerTest {
         group.setName(GROUP);
         group.setPath("rootGroup/group");
         group.setSubGroups(subGroups);
+        group.setSubGroups(subGroups);
 
         UserRepresentation user = new UserRepresentation();
         user.setId("userId");

@@ -23,7 +23,7 @@ package org.kathra.usermanager.controller;
 import org.kathra.core.model.Assignation;
 import org.kathra.core.model.Group;
 import org.kathra.core.model.User;
-import org.kathra.usermanager.Config;
+import org.kathra.usermanager.configuration.Config;
 import org.kathra.usermanager.service.UserManagerService;
 import org.kathra.usermanager.services.KeycloakService;
 import org.apache.camel.cdi.ContextName;
@@ -48,9 +48,9 @@ public class UserManagerController implements UserManagerService {
                 config.getKeycloakAuthUrl(),
                 config.getKeycloakRealmAdmin(),
                 config.getKeycloakRealm(),
-                config.getKeycloakClientId(),
-                config.getKeycloakUsername(),
-                config.getKeycloakPassword());
+                config.getKeycloakAdminClientId(),
+                config.getKeycloakAdminUsername(),
+                config.getKeycloakAdminPassword());
     }
     public UserManagerController(KeycloakService keycloakService) {
         this.keycloakService = keycloakService;
