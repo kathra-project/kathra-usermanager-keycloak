@@ -1,5 +1,5 @@
-/* 
- * Copyright 2019 The Kathra Authors.
+/*
+ * Copyright (c) 2020. The Kathra Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,11 @@
  * limitations under the License.
  *
  * Contributors:
- *
- *    IRT SystemX (https://www.kathra.org/)    
+ *    IRT SystemX (https://www.kathra.org/)
  *
  */
 
-package org.kathra.usermanager;
+package org.kathra.usermanager.configuration;
 
 import org.kathra.utils.ConfigManager;
 
@@ -32,16 +31,20 @@ public class Config extends ConfigManager {
     private String keycloakRealm;
     private String keycloakRealmAdmin;
     private String keycloakClientId;
-    private String keycloakUsername;
-    private String keycloakPassword;
+    private String keycloakAdminClientId;
+    private String keycloakAdminUsername;
+    private String keycloakAdminPassword;
+    private String jobVerifyPermission;
 
     public Config() {
         keycloakAuthUrl = getProperty("KEYCLOAK_ADMIN_AUTH_URL");
         keycloakRealmAdmin = getProperty("KEYCLOAK_ADMIN_REALM");
         keycloakRealm = getProperty("KEYCLOAK_REALM");
-        keycloakClientId = getProperty("KEYCLOAK_ADMIN_CLIENT_ID");
-        keycloakUsername = getProperty("KEYCLOAK_ADMIN_USERNAME");
-        keycloakPassword = getProperty("KEYCLOAK_ADMIN_PASSWORD");
+        keycloakClientId = getProperty("KEYCLOAK_CLIENT_ID");
+        keycloakAdminClientId = getProperty("KEYCLOAK_ADMIN_CLIENT_ID");
+        keycloakAdminUsername = getProperty("KEYCLOAK_ADMIN_USERNAME");
+        keycloakAdminPassword = getProperty("KEYCLOAK_ADMIN_PASSWORD");
+        jobVerifyPermission = getProperty("SCHEDULE_CHECK_PERMISSION_DELAY", "600s");
     }
 
     public String getKeycloakAuthUrl() {
@@ -52,20 +55,28 @@ public class Config extends ConfigManager {
         return keycloakRealm;
     }
 
-    public String getKeycloakClientId() {
-        return keycloakClientId;
+    public String getKeycloakAdminClientId() {
+        return keycloakAdminClientId;
     }
 
 
-    public String getKeycloakUsername() {
-        return keycloakUsername;
+    public String getKeycloakAdminUsername() {
+        return keycloakAdminUsername;
     }
 
-    public String getKeycloakPassword() {
-        return keycloakPassword;
+    public String getKeycloakAdminPassword() {
+        return keycloakAdminPassword;
     }
 
     public String getKeycloakRealmAdmin() {
         return keycloakRealmAdmin;
+    }
+
+    public String getKeycloakClientId() {
+        return keycloakClientId;
+    }
+
+    public String getJobVerifyPermission() {
+        return jobVerifyPermission;
     }
 }
