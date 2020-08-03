@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 The Kathra Authors.
+ * Copyright (c) 2020. The Kathra Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  * Contributors:
- *
  *    IRT SystemX (https://www.kathra.org/)
  *
  */
@@ -23,7 +22,7 @@ package org.kathra.usermanager.controller;
 import org.kathra.core.model.Assignation;
 import org.kathra.core.model.Group;
 import org.kathra.core.model.User;
-import org.kathra.usermanager.Config;
+import org.kathra.usermanager.configuration.Config;
 import org.kathra.usermanager.service.UserManagerService;
 import org.kathra.usermanager.services.KeycloakService;
 import org.apache.camel.cdi.ContextName;
@@ -48,9 +47,9 @@ public class UserManagerController implements UserManagerService {
                 config.getKeycloakAuthUrl(),
                 config.getKeycloakRealmAdmin(),
                 config.getKeycloakRealm(),
-                config.getKeycloakClientId(),
-                config.getKeycloakUsername(),
-                config.getKeycloakPassword());
+                config.getKeycloakAdminClientId(),
+                config.getKeycloakAdminUsername(),
+                config.getKeycloakAdminPassword());
     }
     public UserManagerController(KeycloakService keycloakService) {
         this.keycloakService = keycloakService;
